@@ -73,7 +73,7 @@ class Contact(db.Model):
 
 
     def __repr__(self):
-        return f'The following contact has been added to the phonebook: {self.name}'
+        return f'The following contact has been added to the plant inventory: {self.name}'
 
     def set_id(self):
         return (secrets.token_urlsafe())
