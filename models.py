@@ -22,7 +22,7 @@ class User(db.Model, UserMixin):
     id = db.Column(db.String, primary_key=True)
     first_name = db.Column(db.String(150), nullable=True, default='')
     last_name = db.Column(db.String(150), nullable = True, default = '')
-    email = db.Column(db.String(150), nullable = False)
+    email = db.Column(db.String(150), nullable = False, unique= True)
     password = db.Column(db.String, nullable = True, default = '')
     g_auth_verify = db.Column(db.Boolean, default = False)
     token = db.Column(db.String, default = '', unique = True )
@@ -59,9 +59,10 @@ class Contact(db.Model):
     species = db.Column(db.String(200))
     common_name = db.Column(db.String(200))
     origin = db.Column(db.String(200))
-    user_token = db.Column(db.String, db.ForeignKey('user.token'), nullable = False)
+    #user_token = db.Column(db.String, db.ForeignKey('user.token'), nullable = False)
+    uid=db.Column(db.String)
 
-    def __init__(self,name,family,genus,species,common_name,origin,user_token, id = ''):
+    def __init__(self,name,family,genus,species,common_name,origin,uid):
         self.id = self.set_id()
         self.name = name
         self.family = family
@@ -69,7 +70,8 @@ class Contact(db.Model):
         self.species = species
         self.common_name = common_name
         self.origin = origin
-        self.user_token = user_token
+        #self.user_token = user_token
+        self.uid = uid
 
 
     def __repr__(self):

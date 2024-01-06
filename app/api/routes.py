@@ -7,8 +7,8 @@ api = Blueprint('api',__name__, url_prefix='/api')
 
 #Creating
 @api.route('/plants', methods = ['POST'])
-@token_required
-def create_plant(current_user_token):
+#@token_required
+def create_plant():
 
     print(request.json)
     name = request.json['name']
@@ -17,14 +17,14 @@ def create_plant(current_user_token):
     species = request.json['species']
     common_name =request.json['common_name']
     origin = request.json['origin']
-    user_token = current_user_token.token
+    uid = request.json['uid']
 
     print(f'BIG TESTER: {current_user_token.token}')
 
 
 
 
-    contact = Contact(name, family, genus, species, common_name, origin, user_token = user_token )
+    contact = Contact(name, family, genus, species, common_name, origin, uid)
     print(contact)
     db.session.add(contact)
     db.session.commit()
@@ -32,11 +32,10 @@ def create_plant(current_user_token):
     response = contact_schema.dump(contact)
     return jsonify(response)
 #Retrieving all 
-@api.route('/plants/', methods=['GET'])
-@token_required
-def get_all_plants(current_user_token):
-    a_user=current_user_token.token
-    contacts=Contact.query.filter_by(user_token=a_user).all()
+@api.route('/plants/user/<uid>', methods=['GET'])
+# @token_required
+def get_all_plants(uid):
+    contacts=Contact.query.filter_by(uid=uid).all()
     response=contacts_schema.dump(contacts)
     return jsonify(response)
 
