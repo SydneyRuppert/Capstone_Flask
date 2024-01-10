@@ -19,7 +19,7 @@ def create_plant():
     origin = request.json['origin']
     uid = request.json['uid']
 
-    print(f'BIG TESTER: {current_user_token.token}')
+    #print(f'BIG TESTER: {current_user_token.token}')
 
 
 
@@ -41,18 +41,21 @@ def get_all_plants(uid):
 
 
 #Retrieving single
-@api.route('plants/<id>',methods=['GET'])
-@token_required
-def get_single_plant(current_user_token,id):
+@api.route('/plants/<id>',methods=['GET'])
+#@token_required
+def get_single_plant(id):
     contact=Contact.query.get(id)
     response=contact_schema.dump(contact)
     return jsonify(response)
 
 #Updating
 @api.route('/plants/<id>', methods=['POST','PUT'])
-@token_required
-def update_car(current_user_token, id):
+#@token_required
+def update_car( id):
     contact=Contact.query.get(id)
+    uid= request.json['uid']
+    if contact.uid != uid:
+        return {'status':"invalid user"}, 400
     contact.name = request.json['name']
     contact.family = request.json['family']
     contact.genus = request.json['genus']
@@ -66,8 +69,8 @@ def update_car(current_user_token, id):
 
 #Deleting car
 @api.route('/plants/<id>', methods=['DELETE'])
-@token_required
-def delete_car(current_user_token,id):
+#@token_required
+def delete_car(id):
     contact= Contact.query.get(id)
     db.session.delete(contact)
     db.session.commit()
